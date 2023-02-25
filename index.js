@@ -16,10 +16,11 @@ const Employee = require("./lib/Employee");
 
 let team = [];
 let employeeTypeSelector = ""
-employeeType()
 
-async function employeeType() {
-  const answers = await inquirer
+
+async function getEmployeeType() {
+  console.log('point 1 ')
+  const employeeTypeAnswers = await inquirer
     .prompt([
       {
         type: 'checkbox',
@@ -29,133 +30,134 @@ async function employeeType() {
 
       },
     ])
-  .then((answers) => {
-    employeeTypeSelector = answers;
-  });
+  employeeTypeSelector = employeeTypeAnswers.Employee[0];
+  console.log(employeeTypeAnswers)
+
+
+  if (employeeTypeSelector === "Manager") {
+    const managerDetailAnswers = await inquirer.prompt([
+      {
+
+        type: 'input',
+        name: 'Name',
+        message: "Employee Name?",
+      },
+      {
+        type: 'input',
+        name: 'Id',
+        message: "Employee ID?",
+      },
+      {
+        type: 'input',
+        name: 'Email',
+        message: "Email Address?",
+      },
+      {
+        type: 'input',
+        name: 'Number',
+        message: "Office Number",
+      },
+    ])
+
+    const manager = new Manager(
+      managerDetailAnswers.Name,
+      managerDetailAnswers.Id,
+      managerDetailAnswers.Email,
+      managerDetailAnswers.Number,
+    );
+    team.push(manager);
+  };
+
+
+
+  if (employeeTypeSelector === "Engineer") {
+    let engineerAnswers = await inquirer.prompt([
+      {
+
+        type: 'input',
+        name: 'Name',
+        message: "Employee Name?",
+      },
+      {
+        type: 'input',
+        name: 'Id',
+        message: "Employee ID?",
+      },
+      {
+        type: 'input',
+        name: 'Email',
+        message: "Email Address?",
+      },
+      {
+        type: 'input',
+        name: 'Github',
+        message: "Github UserName?",
+      },
+    ])
+
+    const engineer = new Engineer(
+      engineerAnswers.Name,
+      engineerAnswers.Id,
+      engineerAnswers.Email,
+      engineerAnswers.Github,
+    );
+    team.push(engineer);
+
+  }
+
+  if (employeeTypeSelector === "Intern") {
+    let internAnswers = await inquirer.prompt([
+      {
+
+        type: 'input',
+        name: 'Name',
+        message: "Employee Name?",
+      },
+      {
+        type: 'input',
+        name: 'Id',
+        message: "Employee ID?",
+      },
+      {
+        type: 'input',
+        name: 'Email',
+        message: "Email Address?",
+      },
+      {
+        type: 'input',
+        name: 'School',
+        message: "School?",
+      },
+    ])
+
+    const intern = new Intern(
+      internAnswers.Name,
+      internAnswers.Id,
+      internAnswers.Email,
+      internAnswers.School,
+    );
+    team.push(intern);
+  }
+
 }
+
+
 async function startProgram() {
-  await employeeType()
-  startProgram()
+  for (let i = 0; i < 5; i++) {
+    await getEmployeeType()
+   }
+
   // team.push(new Manager("Andrew", 1, "test@test.com", 8426))
   // team.push(new Engineer("Gertrude", 2, "test@test.com", "github"))
   // team.push(new Intern("Max", 3, "test@test.com", "Harvard"))
-
-}
-
-if (employeeTypeSelector === "Manager") {
-  let generateManager = inquirer.prompt([
-    {
-
-      type: 'input',
-      name: 'Name',
-      message: "Employee Name?",
-    },
-    {
-      type: 'input',
-      name: 'Id',
-      message: "Employee ID?",
-    },
-    {
-      type: 'input',
-      name: 'Email',
-      message: "Email Address?",
-    },
-    {
-      type: 'input',
-      name: 'Number',
-      message: "Office Number",
-    },
-  ])
-  .then((answers) => {
-    const manager = new Manager(
-      answers.Name,
-        answers.Id,
-        answers.Email,
-        answers.Number,
-        );
-        team.push(manager);
-      });
-      
-    }
-    
-    if (employeeTypeSelector === "Engineer") {
-      let generateEngineer = inquirer.prompt([
-    {
-
-      type: 'input',
-      name: 'Name',
-      message: "Employee Name?",
-    },
-    {
-      type: 'input',
-      name: 'Id',
-      message: "Employee ID?",
-    },
-    {
-      type: 'input',
-      name: 'Email',
-      message: "Email Address?",
-    },
-    {
-      type: 'input',
-      name: 'Github',
-      message: "Github UserName?",
-    },
-  ])
-    .then((answers) => {
-      const engineer = new Engineer(
-        answers.Name,
-        answers.Id,
-        answers.Email,
-        answers.Github,
-        );
-        team.push(engineer);
-      });
-      employeeType()
-    }
-    
-    if (employeeTypeSelector === "Intern") {
-      let generateintern = inquirer.prompt([
-    {
-
-      type: 'input',
-      name: 'Name',
-      message: "Employee Name?",
-    },
-    {
-      type: 'input',
-      name: 'Id',
-      message: "Employee ID?",
-    },
-    {
-      type: 'input',
-      name: 'Email',
-      message: "Email Address?",
-    },
-    {
-      type: 'input',
-      name: 'School',
-      message: "School?",
-    },
-  ])
-    .then((answers) => {
-      const intern = new Intern(
-        answers.Name,
-        answers.Id,
-        answers.Email,
-        answers.School,
-        );
-        team.push(intern);
-      });
-      employeeType()
-    }
-    
-if (employeeTypeSelector === "Team Completed") {
-  
   let htmlDoc = render(team)
-  
+
   fs.writeFile(outputPath, htmlDoc, function (err) {
     if (err) throw err;
     console.log('File written successfully!');
   });
+
 }
+
+startProgram()
+
